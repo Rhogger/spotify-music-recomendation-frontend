@@ -1,0 +1,36 @@
+ [theme]
+
+# Cor de base, fundamental para forçar o tema.
+
+base = "dark"
+
+
+# Cor principal: Usada para botões, checkboxes, preenchimento do slider, e cor de destaque.
+
+primaryColor = "#38E07B"
+
+
+# Cor de fundo principal do app.
+
+backgroundColor = "#122017"
+
+
+# Cor de fundo secundária: Usada na sidebar e no trilho (barra) dos sliders.
+
+secondaryBackgroundColor = "#292D2A"
+
+
+# Cor do texto principal (usada na maioria das labels).
+textColor="#BFC2C0"
+
+
+# Cor da borda e separadores.
+
+# (Streamlit não tem um parâmetro 'separators', mas usa 'borderColor' para bordas divisórias.)
+
+borderColor = "#2A362E"
+
+
+# Fonte (opcional)
+
+font = "'Spline Sans':https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300..700&display=swap" 

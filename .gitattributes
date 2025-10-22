@@ -1,0 +1,51 @@
+# Jupyter Notebook configuration
+# Remove metadata and output from diffs to focus on code changes
+*.ipynb diff=jupyternotebook
+*.ipynb merge=jupyternotebook
+
+# Alternative: Treat notebooks as binary files (simpler but less informative)
+# *.ipynb -diff
+
+# Text files should be normalized
+*.py text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+
+# CSV files
+*.csv text eol=lf
+
+# Documentation files
+*.rst text eol=lf
+LICENSE text eol=lf
+README* text eol=lf
+
+# Configuration files
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.env* text eol=lf
+Pipfile text eol=lf
+requirements*.txt text eol=lf
+setup.py text eol=lf
+setup.cfg text eol=lf
+pyproject.toml text eol=lf
+ruff.toml text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+*.pickle binary
+*.h5 binary
+*.hdf5 binary
+*.db binary
+*.sqlite binary
+*.sqlite3 binary

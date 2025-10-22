@@ -1,0 +1,114 @@
+{
+  "folders": [
+    {
+      "path": "../"
+    }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "python",
+    "python.terminal.activateEnvironment": true,
+    "[python]": {
+      "editor.defaultFormatter": "charliermarsh.ruff",
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.fixAll": "explicit"
+      }
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-toolsai.jupyter",
+      "charliermarsh.ruff",
+      "ms-toolsai.datawrangler",
+      "GrapeCity.gc-excelviewer",
+      "oderwat.indent-rainbow",
+      "christian-kohler.path-intellisense",
+      "searKing.preview-vscode",
+      "ms-python.python"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Install Dependencies (Pipenv)",
+        "type": "shell",
+        "command": "pipenv install",
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Install Dependencies (venv)",
+        "type": "shell",
+        "command": "python -m venv venv && source venv/bin/activate && pip install -r requirements.txt",
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Activate Environment (Pipenv)",
+        "type": "shell",
+        "command": "pipenv shell",
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Activate Environment (venv)",
+        "type": "shell",
+        "command": "source venv/bin/activate",
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Run Linter",
+        "type": "shell",
+        "command": "pipenv run ruff check .",
+        "group": "test",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Format Code",
+        "type": "shell",
+        "command": "pipenv run ruff format .",
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      }
+    ]
+  }
+}

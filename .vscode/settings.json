@@ -1,0 +1,65 @@
+{
+  "python.defaultInterpreterPath": "python",
+  "python.terminal.activateEnvironment": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.completeFunctionParens": true,
+  // Ruff Configuration
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+      "source.fixAll": "explicit"
+    }
+  },
+  // Jupyter Configuration
+  "jupyter.askForKernelRestart": false,
+  "jupyter.interactiveWindow.collapseCellInputCode": "firstLine",
+  "notebook.cellToolbarLocation": {
+    "default": "right",
+    "jupyter-notebook": "left"
+  },
+  "notebook.lineNumbers": "on",
+  // File Explorer
+  "explorer.compactFolders": false,
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/.pytest_cache": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/.git": false
+  },
+  // Editor Configuration
+  "editor.rulers": [
+    88
+  ],
+  "editor.wordWrap": "on",
+  "editor.minimap.enabled": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  // Terminal Configuration
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  "terminal.integrated.cwd": "${workspaceFolder}",
+  // CSV/Excel Viewer
+  "csv-preview.hasHeaders": true,
+  "csv-preview.separator": ",",
+  "csv-preview.quoteMark": "\"",
+  // Data Wrangler
+  "dataWrangler.enableRowSelection": true,
+  "dataWrangler.maximumRowsLoaded": 10000,
+  // Git Configuration
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "git.autofetch": true,
+  // Search Configuration
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/__pycache__": true,
+    "**/*.pyc": true
+  },
+  "jupyter.interactiveWindow.textEditor.executeSelection": true
+}
