@@ -464,8 +464,9 @@ def get_text_overflow_script() -> str:
             const style = parentDoc.createElement('style');
             style.id = styleId;
             style.textContent = `
-                ._container_ { display: none !important; }
-                ._profileContainer_ { display: none !important; }
+                [class*="_container_"] { display: none !important; }
+                [class*="_profileContainer_"] { display: none !important; }
+                [class*="_profilePreview_"] { display: none !important; }
                 [data-testid="stStatusWidget"] { display: none !important; }
             `;
             parentDoc.head.appendChild(style);
