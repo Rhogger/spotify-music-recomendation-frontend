@@ -55,7 +55,7 @@ class ModelLoader:
         path_preprocessor = os.path.join(
             assets_path, "models/music_preprocessor.joblib"
         )
-        path_df = os.path.join(assets_path, "datasets/data_clean.csv")
+        path_df = os.path.join(assets_path, "datasets/pre_processing.csv")
         path_features = os.path.join(assets_path, "models/music_model_features.pkl")
 
         # Load files with error handling

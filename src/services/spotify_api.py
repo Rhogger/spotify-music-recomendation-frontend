@@ -1,11 +1,10 @@
 """
 Spotify API Service
-Provides functions to interact with Spotify API for searching tracks and getting images
+Provides functions to interact with Spotify API for fetching tracks by ID
 """
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, List, Optional
-from urllib.parse import quote
 
 import requests
 
@@ -17,85 +16,59 @@ SPOTIFY_API_BASE = "https://api.spotify.com/v1"
 class SpotifyAPIError(Exception):
     """Custom exception for Spotify API errors."""
 
-    token = get_access_token()
-    print(f"Token: {token}")
     pass
 
 
-def search_track(
-    track_name: str,
-    artist_name: str,
-    limit: int = 1,
-) -> List[Dict]:
+def get_track_by_id(track_id: str) -> Optional[Dict]:
     """
-    Search for a track on Spotify by name and artist.
+    Get track information from Spotify by track ID.
 
     Args:
-        track_name (str): Name of the track to search
-        artist_name (str): Name of the artist
-        limit (int): Maximum number of results to return (default: 1)
+        track_id (str): Spotify track ID
 
     Returns:
-        List[Dict]: List of track information dictionaries containing:
+        Optional[Dict]: Track information dictionary containing:
             - id: Spotify track ID
             - name: Track name
             - artists: List of artist names
             - album: Album information with images
             - external_urls: Spotify URL to the track
+            - genres: List of genres (if available)
 
     Raises:
-        SpotifyAPIError: If the search fails
+        SpotifyAPIError: If the request fails
     """
     try:
         access_token = get_access_token()
     except RuntimeError as e:
         raise SpotifyAPIError(f"Could not obtain access token: {e}")
 
-    # Build search query
-    query = f"track:{track_name} artist:{artist_name}"
-    encoded_query = quote(query)
-
-    # Make API request
     headers = {"Authorization": f"Bearer {access_token}"}
-    params = {
-        "q": encoded_query,
-        "type": "track",
-        "limit": limit,
-    }
 
     try:
         response = requests.get(
-            f"{SPOTIFY_API_BASE}/search",
+            f"{SPOTIFY_API_BASE}/tracks/{track_id}",
             headers=headers,
-            params=params,
             timeout=10,
         )
         response.raise_for_status()
     except requests.RequestException as e:
-        raise SpotifyAPIError(f"Failed to search tracks: {e}")
+        raise SpotifyAPIError(f"Failed to fetch track {track_id}: {e}")
 
-    data = response.json()
-    items = data.get("tracks", {}).get("items", [])
+    track = response.json()
 
-    if not items:
-        return []
+    track_info = {
+        "id": track["id"],
+        "name": track["name"],
+        "artists": [artist["name"] for artist in track["artists"]],
+        "album": {
+            "name": track["album"]["name"],
+            "images": track["album"].get("images", []),
+        },
+        "external_urls": track.get("external_urls", {}),
+    }
 
-    # Extract track information
-    results = []
-    for track in items:
-        track_info = {
-            "id": track["id"],
-            "name": track["name"],
-            "artists": [artist["name"] for artist in track["artists"]],
-            "album": {
-                "name": track["album"]["name"],
-                "images": track["album"].get("images", []),
-            },
-            "external_urls": track.get("external_urls", {}),
-        }
-        results.append(track_info)
-
-    return results
+    return track_info
 
 
 def get_best_album_image(images: List[Dict], size: str = "medium") -> Optional[str]:
@@ -128,49 +101,55 @@ def get_best_album_image(images: List[Dict], size: str = "medium") -> Optional[s
     return images[0]["url"] if images else None
 
 
-def _fetch_spotify_data(track_name: str, artist_name: str) -> Dict:
+def _fetch_spotify_data_by_id(track_id: str) -> Dict:
     """
-    Internal function to fetch Spotify data for a single track.
+    Internal function to fetch Spotify data for a single track by ID.
     Used for parallel execution.
 
     Args:
-        track_name: Name of the track
-        artist_name: Name of the artist
+        track_id: Spotify track ID
 
     Returns:
-        Dict with image_url and spotify_url (or None if not found)
+        Dict with title, artist, image_url, spotify_url, and genres
     """
     try:
-        results = search_track(track_name, artist_name, limit=1)
-        if results:
-            track = results[0]
+        track = get_track_by_id(track_id)
+        if track:
             image_url = get_best_album_image(track.get("album", {}).get("images", []))
             spotify_url = track.get("external_urls", {}).get("spotify", "")
+            artists = ", ".join(track.get("artists", []))
+
             return {
+                "title": track.get("name", "Unknown"),
+                "artist": artists,
                 "image_url": image_url,
                 "spotify_url": spotify_url,
+                "genres": "",
             }
     except Exception as e:
-        print(f"⚠️ Error fetching Spotify data for {track_name}: {e}")
+        print(f"⚠️ Error fetching Spotify data for track {track_id}: {e}")
 
     return {
+        "title": "Unknown",
+        "artist": "Unknown Artist",
         "image_url": None,
         "spotify_url": None,
+        "genres": "",
     }
 
 
 def fetch_spotify_data_parallel(tracks: List[Dict], max_workers: int = 5) -> List[Dict]:
     """
-    Fetch Spotify data for multiple tracks in parallel.
+    Fetch Spotify data for multiple tracks in parallel using track IDs.
 
     Args:
-        tracks (List[Dict]): List of track dictionaries with 'title' and 'artist' keys
+        tracks (List[Dict]): List of track dictionaries with 'id' key (Spotify track ID)
         max_workers (int): Maximum number of parallel requests (default: 5)
 
     Returns:
-        List[Dict]: List of enriched track data with image_url and spotify_url
+        List[Dict]: List of enriched track data with title, artist, image_url, spotify_url, and genres
 
-    This function uses ThreadPoolExecutor to make up to 20 requests in parallel,
+    This function uses ThreadPoolExecutor to make requests in parallel,
     significantly speeding up the enrichment process compared to sequential requests.
     """
     results = []
@@ -179,9 +158,8 @@ def fetch_spotify_data_parallel(tracks: List[Dict], max_workers: int = 5) -> Lis
         # Submit all tasks
         futures = {
             executor.submit(
-                _fetch_spotify_data,
-                track.get("title", track.get("song", "Unknown")),
-                track.get("artist", track.get("artists", "Unknown")),
+                _fetch_spotify_data_by_id,
+                track.get("id", ""),
             ): track
             for track in tracks
         }
@@ -191,17 +169,13 @@ def fetch_spotify_data_parallel(tracks: List[Dict], max_workers: int = 5) -> Lis
             try:
                 spotify_data = future.result()
                 original_track = futures[future]
+
+                # Merge original track data with Spotify data
                 results.append(
                     {
-                        "title": original_track.get(
-                            "title", original_track.get("song", "Unknown Title")
-                        ),
-                        "artist": original_track.get(
-                            "artist", original_track.get("artists", "Unknown Artist")
-                        ),
-                        "genres": original_track.get(
-                            "genres", original_track.get("genre", "")
-                        ),
+                        "title": spotify_data.get("title", "Unknown Title"),
+                        "artist": spotify_data.get("artist", "Unknown Artist"),
+                        "genres": original_track.get("genres", spotify_data.get("genres", "")),
                         "image_url": spotify_data.get("image_url"),
                         "spotify_url": spotify_data.get("spotify_url"),
                     }

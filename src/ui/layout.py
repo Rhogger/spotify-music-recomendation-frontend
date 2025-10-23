@@ -35,9 +35,6 @@ def init_app():
             with st.container():
                 st.markdown("### Parâmetros")
 
-                pop = slider_with_label(
-                    "Popularidade", "Indica a popularidade da música", "pop_slider"
-                )
                 dance = slider_with_label(
                     "Dançabilidade", "Indica quão dançável é a música", "dance_slider"
                 )
@@ -69,7 +66,6 @@ def init_app():
         if submit:
             try:
                 resultados = recommend(
-                    popularity=pop / 100.0,
                     danceability=dance / 100.0,
                     energy=energy / 100.0,
                     speechiness=speech / 100.0,
@@ -130,14 +126,14 @@ def init_app():
                   </div>
                   <div class="step">
                       <div class="step-number">2</div>
-                      <div class="step-text">Configure <span class="highlight">Popularidade, Dançabilidade, Energia</span> e mais</div>
+                      <div class="step-text">Configure <span class="highlight">Dançabilidade, Energia, Discurso</span> e mais</div>
                   </div>
                   <div class="step">
                       <div class="step-number">3</div>
                       <div class="step-text">Clique em <span class="highlight">Gerar recomendação</span> para descobrir novas músicas</div>
                   </div>
                   <div class="tip">
-                      💡 <strong>Dica:</strong> Varie Popularidade e Energia para resultados diferentes!
+                      💡 <strong>Dica:</strong> Varie Discurso e Instrumentalidade para resultados diferentes!
                   </div>
               </div>
           </div>

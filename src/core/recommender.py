@@ -22,7 +22,6 @@ class MusicRecommender:
 
     def recommend(
         self,
-        popularity: float,
         danceability: float,
         energy: float,
         speechiness: float,
@@ -34,7 +33,6 @@ class MusicRecommender:
         Generate music recommendations based on audio features.
 
         Args:
-            popularity (float): Popularity score (0.0 - 1.0)
             danceability (float): Danceability score (0.0 - 1.0)
             energy (float): Energy score (0.0 - 1.0)
             speechiness (float): Speechiness score (0.0 - 1.0)
@@ -54,7 +52,6 @@ class MusicRecommender:
 
         # Validate parameters
         params = {
-            "popularity": popularity,
             "danceability": danceability,
             "energy": energy,
             "speechiness": speechiness,
@@ -106,7 +103,6 @@ def get_recommender() -> MusicRecommender:
 
 
 def recommend(
-    popularity: float,
     danceability: float,
     energy: float,
     speechiness: float,
@@ -118,7 +114,6 @@ def recommend(
     Convenience function to get recommendations.
 
     Args:
-        popularity: Popularity score (0.0 - 1.0)
         danceability: Danceability score (0.0 - 1.0)
         energy: Energy score (0.0 - 1.0)
         speechiness: Speechiness score (0.0 - 1.0)
@@ -130,7 +125,6 @@ def recommend(
         pd.DataFrame: Recommended tracks
     """
     return get_recommender().recommend(
-        popularity=popularity,
         danceability=danceability,
         energy=energy,
         speechiness=speechiness,
