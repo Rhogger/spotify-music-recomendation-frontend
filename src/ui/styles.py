@@ -180,8 +180,7 @@ def load_styles() -> str:
         .tracks-grid {{
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 0.75rem;
-            /* Force all cards in row to same height */
+            gap: 0.35rem;
             grid-auto-rows: 1fr;
         }}
         
@@ -192,7 +191,6 @@ def load_styles() -> str:
             transition: background 0.3s, border-color 0.3s, transform 0.2s;
             cursor: pointer;
             border: 1px solid transparent;
-            /* Flex layout with overflow hidden to prevent expansion */
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -205,13 +203,9 @@ def load_styles() -> str:
         }}
 
         .track-card-link {{
-            text-decoration: none;
+            text-decoration: none !important;
             display: block;
             transition: transform 0.2s;
-        }}
-
-        .track-card-link:hover {{
-            /* Removed scale effect to keep hover within card bounds */
         }}
         
         .track-image {{
@@ -220,7 +214,6 @@ def load_styles() -> str:
             background: linear-gradient(135deg, var(--secondary-background) 0%, var(--border-color) 100%);
             border-radius: 8px;
             margin-bottom: 1rem;
-            /* Keep container size fixed and prevent inner content from stretching the card */
             display: block;
             overflow: hidden;
             flex: 0 0 auto;
@@ -236,44 +229,109 @@ def load_styles() -> str:
             display: block;
         }}
         
+        .track-title-wrapper {{
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 0.25rem;
+        }}
+        
         .track-title {{
             font-size: 1rem;
             font-weight: 700;
-            margin-bottom: 0.25rem;
             color: var(--text-light);
-            /* Truncate with ellipsis if too long */
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            white-space: nowrap;
+            width: auto;
+            display: block;
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
         }}
+
+        .track-title:focus {{
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }}
+
+        .track-title.has-overflow {{
+            animation: none;
+        }}
+
+        .track-title.has-overflow:hover {{
+            animation: scrollText 5s linear infinite;
+        }}
+        
+        .track-artist-wrapper {{
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }}
+
         .track-artist {{
             font-size: 0.875rem;
             color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-            /* Truncate artist with ellipsis */
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            white-space: nowrap;
+            width: auto;
+            display: block;
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+        }}
+
+        .track-artist:focus {{
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }}
+
+        .track-artist.has-overflow {{
+            animation: none;
+        }}
+
+        .track-artist.has-overflow:hover {{
+            animation: scrollText 5s linear infinite;
+        }}
+        
+        .track-genres-wrapper {{
+            width: 100%;
             overflow: hidden;
+            margin-top: auto;
         }}
         
         .track-genres {{
             font-size: 0.8rem;
             color: var(--primary-color);
             font-weight: 500;
-            /* Push genres to the bottom of the card so content is balanced */
-            margin-top: auto;
-            overflow: hidden;
-            text-overflow: ellipsis;
             white-space: nowrap;
+            width: auto;
+            display: block;
+            text-transform: capitalize;
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+        }}
+
+        .track-genres:focus {{
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }}
+
+        .track-genres.has-overflow {{
+            animation: none;
+        }}
+
+        .track-genres.has-overflow:hover {{
+            animation: scrollText 5s linear infinite;
         }}
         
         .scrollable-list {{
             padding-bottom: 32px;
         }}
 
-        /* Placeholder Instruction Card */
         .placeholder-instruction {{
             background: linear-gradient(135deg, rgba(56, 224, 123, 0.1) 0%, rgba(41, 45, 42, 0.3) 100%);
             border: 2px solid var(--primary-color);
@@ -350,5 +408,90 @@ def load_styles() -> str:
             color: var(--text-secondary);
             text-align: left;
         }}
+
+        .loading-container {{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            min-height: 400px;
+            gap: 1.5rem;
+        }}
+
+        .loading-text {{
+            color: var(--text-light);
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }}
+
+        .spinner {{
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--secondary-background);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }}
+
+        @keyframes spin {{
+            0% {{ transform: rotate(0deg); }}
+            100% {{ transform: rotate(360deg); }}
+        }}
+
+        @keyframes scrollText {{
+            0% {{ transform: translateX(0); }}
+            100% {{ transform: translateX(-100%); }}
+        }}
     </style>
-"""
+    """
+
+
+def get_text_overflow_script() -> str:
+    """Returns the text overflow detection script to be injected in the app."""
+    return """
+        <script>
+        function detectTextOverflow() {
+            const doc = window.parent.document || window.document;
+            
+            const titles = doc.querySelectorAll('.track-title');
+            const artists = doc.querySelectorAll('.track-artist');
+            const genres = doc.querySelectorAll('.track-genres');
+            
+            function checkOverflow(element) {
+                const wrapper = element.parentElement;
+                if (!wrapper) return;
+                
+                const hasOverflow = element.scrollWidth > wrapper.clientWidth;
+                
+                if (hasOverflow) {
+                    element.classList.add('has-overflow');
+                } else {
+                    element.classList.remove('has-overflow');
+                }
+            }
+            
+            titles.forEach(title => checkOverflow(title));
+            artists.forEach(artist => checkOverflow(artist));
+            genres.forEach(genre => checkOverflow(genre));
+        }
+        
+        detectTextOverflow();
+        
+        setTimeout(detectTextOverflow, 100);
+        setTimeout(detectTextOverflow, 500);
+        setTimeout(detectTextOverflow, 1000);
+        
+        const observer = new MutationObserver(detectTextOverflow);
+        const targetDoc = window.parent.document || window.document;
+        observer.observe(targetDoc.body, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+        
+        setInterval(detectTextOverflow, 500);
+        </script>
+    """

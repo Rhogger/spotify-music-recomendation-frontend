@@ -17,6 +17,8 @@ SPOTIFY_API_BASE = "https://api.spotify.com/v1"
 class SpotifyAPIError(Exception):
     """Custom exception for Spotify API errors."""
 
+    token = get_access_token()
+    print(f"Token: {token}")
     pass
 
 
@@ -189,13 +191,21 @@ def fetch_spotify_data_parallel(tracks: List[Dict], max_workers: int = 5) -> Lis
             try:
                 spotify_data = future.result()
                 original_track = futures[future]
-                results.append({
-                    "title": original_track.get("title", original_track.get("song", "Unknown Title")),
-                    "artist": original_track.get("artist", original_track.get("artists", "Unknown Artist")),
-                    "genres": original_track.get("genres", original_track.get("genre", "")),
-                    "image_url": spotify_data.get("image_url"),
-                    "spotify_url": spotify_data.get("spotify_url"),
-                })
+                results.append(
+                    {
+                        "title": original_track.get(
+                            "title", original_track.get("song", "Unknown Title")
+                        ),
+                        "artist": original_track.get(
+                            "artist", original_track.get("artists", "Unknown Artist")
+                        ),
+                        "genres": original_track.get(
+                            "genres", original_track.get("genre", "")
+                        ),
+                        "image_url": spotify_data.get("image_url"),
+                        "spotify_url": spotify_data.get("spotify_url"),
+                    }
+                )
             except Exception as e:
                 print(f"❌ Error processing track: {e}")
 
