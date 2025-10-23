@@ -44,10 +44,6 @@ def load_styles() -> str:
     return f"""
     <style>
         {get_color_variables()}
-        
-        ._container*, ._profileContainer* {{
-            display: none;
-        }}
 
         body, .main, .block-container {{
             background: linear-gradient(180deg, #1a3a2e 0%, var(--dark-bg) 100%) !important;
@@ -457,6 +453,31 @@ def get_text_overflow_script() -> str:
     """Returns the text overflow detection script to be injected in the app."""
     return """
         <script>
+        // Injetar CSS no documento pai para remover marcas d'água do Streamlit Cloud
+        function injectParentStyles() {
+            const parentDoc = window.parent.document;
+            const styleId = 'custom-parent-styles';
+            
+            // Verificar se o estilo já foi injetado
+            if (parentDoc.getElementById(styleId)) return;
+            
+            const style = parentDoc.createElement('style');
+            style.id = styleId;
+            style.textContent = `
+                ._container_ { display: none !important; }
+                ._profileContainer_ { display: none !important; }
+                [data-testid="stStatusWidget"] { display: none !important; }
+            `;
+            parentDoc.head.appendChild(style);
+        }
+        
+        // Tentar injetar os estilos do parent
+        try {
+            injectParentStyles();
+        } catch (e) {
+            // Se falhar por CORS, continuar normalmente
+        }
+        
         function detectTextOverflow() {
             const doc = window.parent.document || window.document;
             
