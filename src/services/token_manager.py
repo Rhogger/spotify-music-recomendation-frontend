@@ -4,7 +4,6 @@ Handles authentication and access token generation with cookie-based caching
 """
 
 import base64
-import os
 from datetime import datetime, timedelta
 
 import requests
@@ -14,8 +13,10 @@ from dotenv import load_dotenv
 # Load environment variables from .env
 load_dotenv()
 
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+# CLIENT_ID = os.getenv("CLIENT_ID")
+# CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+CLIENT_ID = st.secrets.spotify_credentials.client_id
+CLIENT_SECRET = st.secrets.spotify_credentials.client_secret
 TOKEN_URL = "https://accounts.spotify.com/api/token"
 
 # Cookie keys
@@ -30,9 +31,7 @@ class TokenManager:
     def __init__(self):
         """Initialize TokenManager with credentials from environment."""
         if not CLIENT_ID or not CLIENT_SECRET:
-            raise ValueError(
-                "CLIENT_ID and CLIENT_SECRET must be set in .env file"
-            )
+            raise ValueError("CLIENT_ID and CLIENT_SECRET must be set in .env file")
         self.client_id = CLIENT_ID
         self.client_secret = CLIENT_SECRET
 
@@ -77,7 +76,9 @@ class TokenManager:
             expires_in: Seconds until token expires
         """
         st.session_state[TOKEN_COOKIE_KEY] = token
-        expiry = datetime.now() + timedelta(seconds=expires_in - 300)  # Refresh 5min early
+        expiry = datetime.now() + timedelta(
+            seconds=expires_in - 300
+        )  # Refresh 5min early
         st.session_state[TOKEN_EXPIRY_COOKIE_KEY] = expiry.isoformat()
 
     def get_access_token(self) -> str:

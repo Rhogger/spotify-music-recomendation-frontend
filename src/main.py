@@ -1,5 +1,3 @@
-import os
-
 import streamlit as st
 from dotenv import load_dotenv
 
@@ -9,8 +7,10 @@ from ui.layout import init_app
 load_dotenv()
 
 # Validar variáveis obrigatórias
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+# CLIENT_ID = os.getenv("CLIENT_ID")
+# CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+CLIENT_ID = st.secrets.spotify_credentials.client_id
+CLIENT_SECRET = st.secrets.spotify_credentials.client_secret
 
 if not CLIENT_ID or not CLIENT_SECRET:
     st.error(
