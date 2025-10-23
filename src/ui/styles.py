@@ -44,6 +44,10 @@ def load_styles() -> str:
     return f"""
     <style>
         {get_color_variables()}
+        
+        ._container*, ._profileContainer* {{
+            display: none;
+        }}
 
         body, .main, .block-container {{
             background: linear-gradient(180deg, #1a3a2e 0%, var(--dark-bg) 100%) !important;
