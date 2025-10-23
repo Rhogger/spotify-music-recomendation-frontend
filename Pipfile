@@ -9,10 +9,10 @@ ruff = "*"
 joblib = "*"
 requests = "*"
 python-dotenv = "*"
+scikit-learn = "*"
 
 [dev-packages]
 ipykernel = "*"
-scikit-learn = "*"
 
 [requires]
 python_version = "3.12"
