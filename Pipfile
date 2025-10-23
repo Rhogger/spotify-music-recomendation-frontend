@@ -6,12 +6,13 @@ name = "pypi"
 [packages]
 streamlit = "*"
 ruff = "*"
+joblib = "*"
 requests = "*"
+python-dotenv = "*"
 
 [dev-packages]
 ipykernel = "*"
-requests = "*"
-python-dotenv = "*"
+scikit-learn = "*"
 
 [requires]
 python_version = "3.12"
