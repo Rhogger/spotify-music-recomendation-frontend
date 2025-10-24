@@ -22,22 +22,20 @@ class MusicRecommender:
 
     def recommend(
         self,
+        popularity: float,
         danceability: float,
         energy: float,
-        speechiness: float,
         acousticness: float,
-        instrumentalness: float,
         top_n: int = 5,
     ) -> pd.DataFrame:
         """
         Generate music recommendations based on audio features.
 
         Args:
+            popularity (float): Popularity score (0.0 - 1.0)
             danceability (float): Danceability score (0.0 - 1.0)
             energy (float): Energy score (0.0 - 1.0)
-            speechiness (float): Speechiness score (0.0 - 1.0)
             acousticness (float): Acousticness score (0.0 - 1.0)
-            instrumentalness (float): Instrumentalness score (0.0 - 1.0)
             top_n (int): Number of recommendations to return
 
         Returns:
@@ -52,11 +50,10 @@ class MusicRecommender:
 
         # Validate parameters
         params = {
+            "popularity": popularity,
             "danceability": danceability,
             "energy": energy,
-            "speechiness": speechiness,
             "acousticness": acousticness,
-            "instrumentalness": instrumentalness,
         }
 
         for param, value in params.items():
@@ -103,32 +100,29 @@ def get_recommender() -> MusicRecommender:
 
 
 def recommend(
+    popularity: float,
     danceability: float,
     energy: float,
-    speechiness: float,
     acousticness: float,
-    instrumentalness: float,
     top_n: int = 5,
 ) -> pd.DataFrame:
     """
     Convenience function to get recommendations.
 
     Args:
+        popularity: Popularity score (0.0 - 1.0)
         danceability: Danceability score (0.0 - 1.0)
         energy: Energy score (0.0 - 1.0)
-        speechiness: Speechiness score (0.0 - 1.0)
         acousticness: Acousticness score (0.0 - 1.0)
-        instrumentalness: Instrumentalness score (0.0 - 1.0)
         top_n: Number of recommendations to return
 
     Returns:
         pd.DataFrame: Recommended tracks
     """
     return get_recommender().recommend(
+        popularity=popularity,
         danceability=danceability,
         energy=energy,
-        speechiness=speechiness,
         acousticness=acousticness,
-        instrumentalness=instrumentalness,
         top_n=top_n,
     )

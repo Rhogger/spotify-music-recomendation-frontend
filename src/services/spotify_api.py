@@ -175,7 +175,9 @@ def fetch_spotify_data_parallel(tracks: List[Dict], max_workers: int = 5) -> Lis
                     {
                         "title": spotify_data.get("title", "Unknown Title"),
                         "artist": spotify_data.get("artist", "Unknown Artist"),
-                        "genres": original_track.get("genres", spotify_data.get("genres", "")),
+                        "genres": original_track.get(
+                            "genres", spotify_data.get("genres", "")
+                        ),
                         "image_url": spotify_data.get("image_url"),
                         "spotify_url": spotify_data.get("spotify_url"),
                     }

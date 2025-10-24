@@ -53,7 +53,7 @@ class ModelLoader:
         # Define file paths
         path_model = os.path.join(assets_path, "models/music_recommender_model.joblib")
         path_preprocessor = os.path.join(
-            assets_path, "models/music_preprocessor.joblib"
+            assets_path, "models/pipeline_preprocessor.joblib"
         )
         path_df = os.path.join(assets_path, "datasets/pre_processing.csv")
         path_features = os.path.join(assets_path, "models/music_model_features.pkl")

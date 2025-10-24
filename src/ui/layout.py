@@ -35,6 +35,9 @@ def init_app():
             with st.container():
                 st.markdown("### Parâmetros")
 
+                popularity = slider_with_label(
+                    "Popularidade", "Indica quão popular é a música", "popularity_slider"
+                )
                 dance = slider_with_label(
                     "Dançabilidade", "Indica quão dançável é a música", "dance_slider"
                 )
@@ -43,20 +46,10 @@ def init_app():
                     "Indica quão energética e vibrante é a música",
                     "energy_slider",
                 )
-                speech = slider_with_label(
-                    "Discurso",
-                    "Indica quão a música tem presença de palavras faladas",
-                    "speechiness_slider",
-                )
                 acoustic = slider_with_label(
                     "Acústica",
-                    "Indica quão presente são os sons com equipamentos musicais na música",
+                    "Indica quão presente são os sons acústicos na música",
                     "acoustic_slider",
-                )
-                instr = slider_with_label(
-                    "Instrumentalidade",
-                    "Indica quão a música tem presença de sons instrumentais",
-                    "instr_slider",
                 )
 
             submit = st.form_submit_button(
@@ -65,12 +58,21 @@ def init_app():
 
         if submit:
             try:
+                print("\n" + "=" * 60)
+                print("🎵 GERANDO RECOMENDAÇÃO DE MÚSICAS")
+                print("=" * 60)
+                print("Parâmetros selecionados:")
+                print(f"  Popularidade: {popularity}%")
+                print(f"  Dançabilidade: {dance}%")
+                print(f"  Energia: {energy}%")
+                print(f"  Acústica: {acoustic}%")
+                print("-" * 60)
+
                 resultados = recommend(
+                    popularity=popularity / 100.0,
                     danceability=dance / 100.0,
                     energy=energy / 100.0,
-                    speechiness=speech / 100.0,
                     acousticness=acoustic / 100.0,
-                    instrumentalness=instr / 100.0,
                     top_n=20,
                 )
                 st.session_state["last_recommendations"] = resultados
@@ -126,14 +128,14 @@ def init_app():
                   </div>
                   <div class="step">
                       <div class="step-number">2</div>
-                      <div class="step-text">Configure <span class="highlight">Dançabilidade, Energia, Discurso</span> e mais</div>
+                      <div class="step-text">Configure <span class="highlight">Popularidade, Dançabilidade, Energia</span> e Acústica</div>
                   </div>
                   <div class="step">
                       <div class="step-number">3</div>
                       <div class="step-text">Clique em <span class="highlight">Gerar recomendação</span> para descobrir novas músicas</div>
                   </div>
                   <div class="tip">
-                      💡 <strong>Dica:</strong> Varie Discurso e Instrumentalidade para resultados diferentes!
+                      💡 <strong>Dica:</strong> Varie Popularidade e Energia para resultados diferentes!
                   </div>
               </div>
           </div>
