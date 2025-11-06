@@ -12,11 +12,11 @@ import pandas as pd
 
 
 class ModelLoader:
-    """Handles loading and caching of the ML model and preprocessor."""
+    """Handles loading and caching of the ML model and scaler."""
 
     _instance = None
     _model = None
-    _preprocessor = None
+    _scaler = None
     _df = None
     _features = None
 
@@ -28,23 +28,19 @@ class ModelLoader:
 
     def load(self) -> Tuple:
         """
-        Load model, preprocessor, dataframe, and features from disk.
+        Load model, scaler, dataframe, and features from disk.
         Uses singleton pattern to load only once.
 
         Returns:
-            Tuple: (model, preprocessor, df, features)
+            Tuple: (model, scaler, df, features)
 
         Raises:
             FileNotFoundError: If model files are not found
             Exception: If there's an error loading the files
         """
         # Return cached if already loaded
-        if (
-            self._model is not None
-            and self._preprocessor is not None
-            and self._features is not None
-        ):
-            return self._model, self._preprocessor, self._df, self._features
+        if self._model is not None and self._features is not None:
+            return self._model, self._scaler, self._df, self._features
 
         # Get base paths
         base_path = os.path.dirname(__file__)
@@ -52,9 +48,7 @@ class ModelLoader:
 
         # Define file paths
         path_model = os.path.join(assets_path, "models/music_recommender_model.joblib")
-        path_preprocessor = os.path.join(
-            assets_path, "models/pipeline_preprocessor.joblib"
-        )
+        path_scaler = os.path.join(assets_path, "models/scaler.joblib")
         path_df = os.path.join(assets_path, "datasets/pre_processing.csv")
         path_features = os.path.join(assets_path, "models/music_model_features.pkl")
 
@@ -63,8 +57,8 @@ class ModelLoader:
             print(f"📂 Loading model from: {path_model}")
             self._model = joblib.load(path_model)
 
-            print(f"📂 Loading preprocessor from: {path_preprocessor}")
-            self._preprocessor = joblib.load(path_preprocessor)
+            print(f"📂 Loading scaler from: {path_scaler}")
+            self._scaler = joblib.load(path_scaler)
 
             print(f"📂 Loading features from: {path_features}")
             with open(path_features, "rb") as f:
@@ -78,7 +72,7 @@ class ModelLoader:
                 self._df = None
 
             print("✅ All models loaded successfully!")
-            return self._model, self._preprocessor, self._df, self._features
+            return self._model, self._scaler, self._df, self._features
 
         except FileNotFoundError as e:
             print(f"❌ Error: Model file not found: {e}")
@@ -94,10 +88,10 @@ class ModelLoader:
         return self._model
 
     def get_preprocessor(self):
-        """Get cached preprocessor or load if needed."""
-        if self._preprocessor is None:
+        """Get cached scaler or load if needed."""
+        if self._scaler is None:
             self.load()
-        return self._preprocessor
+        return self._scaler
 
     def get_dataframe(self):
         """Get cached dataframe or load if needed."""

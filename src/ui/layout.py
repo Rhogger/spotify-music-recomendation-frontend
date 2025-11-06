@@ -5,7 +5,15 @@ from dotenv import load_dotenv
 from core.model_loader import load_models
 from core.recommender import recommend
 from services.spotify_api import fetch_spotify_data_parallel
-from ui.components import centered_loader, header, slider_with_label, track_card_html
+from ui.components import (
+    centered_loader,
+    decade_selector,
+    header,
+    is_explicit_checkbox,
+    is_popular_checkbox,
+    slider_with_label,
+    track_card_html,
+)
 from ui.styles import get_text_overflow_script, load_styles
 
 
@@ -14,7 +22,7 @@ def init_app():
     load_dotenv()
 
     # Load models once at startup using singleton pattern
-    model, preprocessor, df_model, features = load_models()
+    model, _, df_model, features = load_models()
 
     st.set_page_config(
         page_title="Recomendações Spotify",
@@ -35,9 +43,6 @@ def init_app():
             with st.container():
                 st.markdown("### Parâmetros")
 
-                popularity = slider_with_label(
-                    "Popularidade", "Indica quão popular é a música", "popularity_slider"
-                )
                 dance = slider_with_label(
                     "Dançabilidade", "Indica quão dançável é a música", "dance_slider"
                 )
@@ -51,6 +56,20 @@ def init_app():
                     "Indica quão presente são os sons acústicos na música",
                     "acoustic_slider",
                 )
+                valence = slider_with_label(
+                    "Valência",
+                    "Indica quão positiva e alegre é a música",
+                    "valence_slider",
+                )
+
+                # Decade selector
+                decade = decade_selector()
+
+                # Popular checkbox
+                is_popular = is_popular_checkbox()
+
+                # Explicit checkbox
+                is_explicit = is_explicit_checkbox()
 
             submit = st.form_submit_button(
                 "Gerar recomendação", use_container_width=True, type="primary"
@@ -62,17 +81,23 @@ def init_app():
                 print("🎵 GERANDO RECOMENDAÇÃO DE MÚSICAS")
                 print("=" * 60)
                 print("Parâmetros selecionados:")
-                print(f"  Popularidade: {popularity}%")
                 print(f"  Dançabilidade: {dance}%")
                 print(f"  Energia: {energy}%")
                 print(f"  Acústica: {acoustic}%")
+                print(f"  Valência: {valence}%")
+                print(f"  Década: {decade}")
+                print(f"  Popular: {'Sim' if is_popular else 'Não'}")
+                print(f"  Explicit: {'Sim' if is_explicit else 'Não'}")
                 print("-" * 60)
 
                 resultados = recommend(
-                    popularity=popularity / 100.0,
-                    danceability=dance / 100.0,
-                    energy=energy / 100.0,
-                    acousticness=acoustic / 100.0,
+                    danceability=dance,
+                    energy=energy,
+                    acousticness=acoustic,
+                    valence=valence,
+                    is_popular=is_popular,
+                    is_explicit=is_explicit,
+                    decade=decade,
                     top_n=20,
                 )
                 st.session_state["last_recommendations"] = resultados
@@ -128,14 +153,18 @@ def init_app():
                   </div>
                   <div class="step">
                       <div class="step-number">2</div>
-                      <div class="step-text">Configure <span class="highlight">Popularidade, Dançabilidade, Energia</span> e Acústica</div>
+                      <div class="step-text">Configure <span class="highlight">Dançabilidade, Energia</span> e Acústica</div>
                   </div>
                   <div class="step">
                       <div class="step-number">3</div>
+                      <div class="step-text">Selecione a <span class="highlight">década</span> e marque se quer <span class="highlight">músicas populares</span></div>
+                  </div>
+                  <div class="step">
+                      <div class="step-number">4</div>
                       <div class="step-text">Clique em <span class="highlight">Gerar recomendação</span> para descobrir novas músicas</div>
                   </div>
                   <div class="tip">
-                      💡 <strong>Dica:</strong> Varie Popularidade e Energia para resultados diferentes!
+                      💡 <strong>Dica:</strong> Varie a Energia para resultados diferentes!
                   </div>
               </div>
           </div>

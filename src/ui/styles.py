@@ -81,22 +81,55 @@ def load_styles() -> str:
         
         .stForm{{
             padding: 0px;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            height: 100% !important;
         }}
         
         .stForm > div {{
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+        }}
+        
+        .stForm > .stVerticalBlock {{
+            justify-content: space-between !important;
         }}
         
         .stColumn {{
-            padding: 32px;
+            padding-top: 32px;
+            padding-left: 32px;
+            padding-right: 32px;
         }}
         
         .stColumn:first-child {{
             border-width: 0px 1px 0px 0px;
             border-color: var(--border-color);
             border-style: solid;
+            overflow-y: auto !important;
+            height: calc(100vh - 71.4px) !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }}
+
+        .stColumn:first-child > div {{
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }}
+
+        .stColumn:first-child::-webkit-scrollbar {{
+            width: 8px;
+        }}
+
+        .stColumn:first-child::-webkit-scrollbar-thumb {{
+            background-color: var(--primary-color);
+            border-radius: 10px;
+        }}
+
+        .stColumn:first-child::-webkit-scrollbar-track {{
+            background: var(--secondary-background);
         }}
         
                 
@@ -172,9 +205,106 @@ def load_styles() -> str:
             font-weight: 600;
         }}
 
+        /* Accordion and Expander Styles */
+        .streamlit-expanderHeader {{
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px !important;
+            margin-bottom: 12px;
+        }}
+
+        .streamlit-expanderHeader:hover {{
+            background: rgba(56, 224, 123, 0.05);
+        }}
+
+        .streamlit-expanderHeader svg {{
+            color: var(--primary-color);
+        }}
+
+        .streamlit-expanderContent {{
+            padding: 12px !important;
+            background: rgba(56, 224, 123, 0.02);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            overflow: visible !important;
+            max-height: none !important;
+        }}
+
+        /* Radio Button Grid - Responsivo com auto-fill */
+        .st-key-decade_radio {{
+            width: 100% !important;
+        }}
+
+        .stElementContainer.st-key-decade_radio {{
+            width: 100% !important;
+            max-width: 100% !important;
+        }}
+
+        .stRadio {{
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: 1 !important;
+        }}
+
+        .stRadio [role="radiogroup"] {{
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)) !important;
+            gap: 12px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }}
+
+        .stRadio > div {{
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            width: 100% !important;
+        }}
+
+        .stRadio input[type="radio"] {{
+            width: 16px !important;
+            height: 16px !important;
+            cursor: pointer !important;
+            accent-color: var(--primary-color) !important;
+        }}
+
+        .stRadio label {{
+            color: var(--text-color) !important;
+            cursor: pointer !important;
+            margin: 0 !important;
+            font-weight: 500 !important;
+        }}
+
+        /* Checkbox Styles */
+        .stCheckbox label {{
+            color: var(--text-light);
+            cursor: pointer;
+            margin: 0;
+            font-weight: 500;
+        }}
+
+        .stCheckbox input[type="checkbox"] {{
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }}
+
         button[data-testid="stBaseButton-primaryFormSubmit"] > div > p {{
             font-weight: 700;
             color: var(--background-color);
+        }}
+
+        button[data-testid="stBaseButton-primaryFormSubmit"] {{
+            margin-bottom: 32px !important;
+            margin-top: auto !important;
+        }}
+
+        .stForm button {{
+            margin-top: auto !important;
         }}
         
         .tracks-grid {{

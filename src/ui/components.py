@@ -5,6 +5,63 @@ def slider_with_label(label, tooltip, key):
     return st.slider(label, 0, 100, 0, 1, key=key, help=tooltip)
 
 
+def decade_selector():
+    """
+    Create an accordion with decade selection (radio buttons).
+
+    Returns:
+        str: Selected decade ('1920', '1930', ..., '2020') or empty string
+    """
+    with st.expander("Selecione a década da música", expanded=False):
+        selected_decade = st.radio(
+            "Década:",
+            options=[
+                "1920",
+                "1930",
+                "1940",
+                "1950",
+                "1960",
+                "1970",
+                "1980",
+                "1990",
+                "2000",
+                "2010",
+                "2020",
+            ],
+            key="decade_radio",
+            label_visibility="collapsed",
+        )
+        return selected_decade
+
+
+def is_popular_checkbox():
+    """
+    Create a checkbox for popular music filter.
+
+    Returns:
+        bool: Whether to filter for popular music
+    """
+    return st.checkbox(
+        "Apenas músicas populares",
+        value=False,
+        key="popular_checkbox",
+    )
+
+
+def is_explicit_checkbox():
+    """
+    Create a checkbox for explicit music filter.
+
+    Returns:
+        bool: Whether to filter for explicit music
+    """
+    return st.checkbox(
+        "Apenas músicas com palavrões",
+        value=False,
+        key="explicit_checkbox",
+    )
+
+
 def track_card_html(song: dict) -> str:
     """
     Generate HTML for a track card with optional image and Spotify link.
@@ -20,14 +77,21 @@ def track_card_html(song: dict) -> str:
     Returns:
         str: HTML string for the track card
     """
+    # Escape special characters in strings to prevent HTML breaking
+    title = song.get("title", "Unknown").replace('"', "&quot;").replace("'", "&#39;")
+    artist = (
+        song.get("artist", "Unknown Artist")
+        .replace('"', "&quot;")
+        .replace("'", "&#39;")
+    )
+    genres = song.get("genres", "").replace('"', "&quot;").replace("'", "&#39;")
+
     image_url = song.get("image_url", "")
     spotify_url = song.get("spotify_url", "")
 
     # Generate image HTML
     if image_url:
-        image_html = (
-            f'<img src="{image_url}" alt="{song["title"]}" class="track-image-img">'
-        )
+        image_html = f'<img src="{image_url}" alt="{title}" class="track-image-img">'
     else:
         image_html = '<div class="track-image">🎵</div>'
 
@@ -44,13 +108,13 @@ def track_card_html(song: dict) -> str:
         <div class="{card_class}">
             {image_html}
             <div class="track-title-wrapper">
-                <div class="track-title">{song.get("title", "Unknown")}</div>
+                <div class="track-title">{title}</div>
             </div>
             <div class="track-artist-wrapper">
-                <div class="track-artist">{song.get("artist", "Unknown Artist")}</div>
+                <div class="track-artist">{artist}</div>
             </div>
             <div class="track-genres-wrapper">
-                <div class="track-genres">{song.get("genres", "")}</div>
+                <div class="track-genres">{genres}</div>
             </div>
         </div>
     """
