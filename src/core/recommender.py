@@ -88,6 +88,7 @@ class MusicRecommender:
 
         # Add categorical features (not scaled)
         numeric_scaled_df["is_popular"] = 1 if is_popular else 0
+        numeric_scaled_df["explicit"] = 1 if is_explicit else 0
         numeric_scaled_df["1920s"] = 1 if decade == "1920" else 0
         numeric_scaled_df["1930s"] = 1 if decade == "1930" else 0
         numeric_scaled_df["1940s"] = 1 if decade == "1940" else 0
@@ -114,8 +115,10 @@ class MusicRecommender:
         if is_popular:
             resultados = resultados[resultados["is_popular"] == 1]
 
+        # Filter for explicit songs if checkbox is marked
         if is_explicit:
-            resultados = resultados[resultados["explicit"] == 1]
+            if "explicit" in resultados.columns:
+                resultados = resultados[resultados["explicit"] == 1]
 
         if decade:
             decade_col = decade + "s"

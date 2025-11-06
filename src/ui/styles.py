@@ -151,6 +151,103 @@ def load_styles() -> str:
             background: var(--secondary-background);
         }}
 
+        /* Tablet and mobile: allow normal scrolling, remove fixed height only for smaller screens */
+        @media (max-width: 800px) {{
+            /* Allow scroll on main container */
+            .stMainBlockContainer {{
+                overflow: auto !important;
+            }}
+            
+            /* Responsive header */
+            .header-title {{
+                font-size: 1rem !important;
+                gap: 0.5rem !important;
+                padding: 0.75rem 1rem !important;
+            }}
+            
+            .spotify-icon {{
+                width: 24px !important;
+                height: 24px !important;
+            }}
+            
+            /* Responsive column padding */
+            .stColumn {{
+                padding-top: 16px !important;
+                padding-left: 16px !important;
+                padding-right: 16px !important;
+            }}
+            
+            /* Stack columns vertically on mobile */
+            .stHorizontalBlock {{
+                flex-direction: column !important;
+                flex-wrap: nowrap !important;
+            }}
+            
+            /* Unified scroll: remove overflow from individual sections */
+            .stColumn:first-child {{
+                height: auto !important;
+                max-height: none !important;
+                padding-bottom: 2rem !important;
+                border-width: 0px 0px 1px 0px !important;
+                width: 100% !important;
+                overflow-y: visible !important;
+            }}
+            
+            .stColumn:last-child {{
+                height: auto !important;
+                max-height: none !important;
+                padding-bottom: 2rem !important;
+                width: 100% !important;
+                overflow-y: visible !important;
+            }}
+            
+            /* Responsive placeholder */
+            .placeholder-instruction {{
+                padding: 1.25rem !important;
+                margin: 0.75rem 0 !important;
+                gap: 1rem !important;
+            }}
+            
+            .placeholder-instruction .icon {{
+                font-size: 2rem !important;
+            }}
+            
+            .placeholder-instruction h2 {{
+                font-size: 1.1rem !important;
+            }}
+            
+            .placeholder-instruction .content {{
+                gap: 0.5rem !important;
+                font-size: 0.85rem !important;
+            }}
+            
+            .placeholder-instruction .step-number {{
+                width: 24px !important;
+                height: 24px !important;
+                font-size: 0.8rem !important;
+            }}
+            
+            .placeholder-instruction .tip {{
+                font-size: 0.8rem !important;
+                padding: 0.5rem 0.75rem !important;
+            }}
+            
+            /* Responsive headings */
+            h3 {{
+                font-size: 1.2rem !important;
+            }}
+            
+            /* Responsive slider labels */
+            .slider-label {{
+                font-size: 0.85rem !important;
+            }}
+            
+            /* Responsive text */
+            p {{
+                font-size: 0.9rem !important;
+            }}
+        }}
+
         .header-title {{
             position: absolute;
             top: 0px;
@@ -309,7 +406,7 @@ def load_styles() -> str:
         
         .tracks-grid {{
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 0.35rem;
             grid-auto-rows: 1fr;
         }}
@@ -324,6 +421,50 @@ def load_styles() -> str:
             display: flex;
             flex-direction: column;
             overflow: hidden;
+        }}
+        
+        /* Mobile: Responsive card sizes with uniform height */
+        @media (max-width: 800px) {{
+            .tracks-grid {{
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+                gap: 1rem !important;
+                grid-auto-rows: 1fr !important;
+                width: 100% !important;
+            }}
+            
+            .track-card {{
+                padding: 0.75rem !important;
+                display: flex !important;
+                flex-direction: column !important;
+                height: 100% !important;
+            }}
+            
+            .track-image {{
+                width: 100%;
+                aspect-ratio: 1;
+                margin-bottom: 0.5rem !important;
+            }}
+            
+            .track-image-img {{
+                width: 100%;
+                height: 100%;
+                margin-bottom: 0.5rem !important;
+            }}
+            
+            .track-title {{
+                font-size: 0.75rem !important;
+                line-height: 1.2 !important;
+            }}
+            
+            .track-artist {{
+                font-size: 0.65rem !important;
+                line-height: 1.2 !important;
+            }}
+            
+            .track-genres {{
+                font-size: 0.6rem !important;
+                line-height: 1.1 !important;
+            }}
         }}
         
         .track-card:hover {{
@@ -458,6 +599,30 @@ def load_styles() -> str:
             animation: scrollText 5s linear infinite;
         }}
         
+        /* Mobile/Tablet: Always animate text overflow without hover */
+        @media (max-width: 800px) {{
+            /* Reduce margins proportionally with font size reduction */
+            .track-title-wrapper {{
+                margin-bottom: 0.15rem !important;
+            }}
+            
+            .track-artist-wrapper {{
+                margin-bottom: 0.3rem !important;
+            }}
+            
+            .track-title.has-overflow {{
+                animation: scrollText 5s linear infinite !important;
+            }}
+            
+            .track-artist.has-overflow {{
+                animation: scrollText 5s linear infinite !important;
+            }}
+            
+            .track-genres.has-overflow {{
+                animation: scrollText 5s linear infinite !important;
+            }}
+        }}
+        
         .scrollable-list {{
             padding-bottom: 32px;
         }}
@@ -555,6 +720,64 @@ def load_styles() -> str:
             font-size: 1.1rem;
             font-weight: 500;
             letter-spacing: 0.5px;
+        }}
+
+        /* Empty state / No results */
+        .empty-state {{
+            background: linear-gradient(135deg, rgba(218, 60, 37, 0.1) 0%, rgba(41, 45, 42, 0.3) 100%);
+            border: 2px solid rgba(218, 60, 37, 0.5);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+            text-align: center;
+        }}
+
+        .empty-state .icon {{
+            font-size: 3rem;
+            animation: pulse 2s ease-in-out infinite;
+        }}
+
+        @keyframes pulse {{
+            0%, 100% {{ opacity: 1; }}
+            50% {{ opacity: 0.6; }}
+        }}
+
+        .empty-state h3 {{
+            color: rgba(218, 60, 37, 0.8);
+            font-size: 1.3rem;
+            margin: 0;
+            font-weight: 700;
+        }}
+
+        .empty-state p {{
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0;
+        }}
+        
+        @media (max-width: 800px) {{
+            .empty-state {{
+                padding: 1.25rem !important;
+                margin: 0.75rem 0 !important;
+                gap: 1rem !important;
+            }}
+            
+            .empty-state .icon {{
+                font-size: 2rem !important;
+            }}
+            
+            .empty-state h3 {{
+                font-size: 1.1rem !important;
+            }}
+            
+            .empty-state p {{
+                font-size: 0.85rem !important;
+            }}
         }}
 
         .spinner {{

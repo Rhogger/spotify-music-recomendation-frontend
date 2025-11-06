@@ -163,9 +163,6 @@ def init_app():
                       <div class="step-number">4</div>
                       <div class="step-text">Clique em <span class="highlight">Gerar recomendação</span> para descobrir novas músicas</div>
                   </div>
-                  <div class="tip">
-                      💡 <strong>Dica:</strong> Varie a Energia para resultados diferentes!
-                  </div>
               </div>
           </div>
           """
@@ -180,3 +177,18 @@ def init_app():
 
             html_tracks += "</div>"
             st.markdown(html_tracks, unsafe_allow_html=True)
+
+        # Mostrar mensagem de sem resultados se tentou gerar mas não achou
+        elif (
+            "last_recommendations" in st.session_state
+            and not is_loading
+            and len(display_list) == 0
+        ):
+            no_results_html = """
+            <div class="empty-state">
+                <div class="icon">😔</div>
+                <h3>Sem resultados</h3>
+                <p>Nenhuma música encontrada com os parâmetros selecionados.<br>Tente ajustar os filtros ou mudar os valores dos sliders.</p>
+            </div>
+            """
+            st.markdown(no_results_html, unsafe_allow_html=True)
