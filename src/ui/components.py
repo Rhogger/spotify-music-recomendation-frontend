@@ -6,12 +6,6 @@ def slider_with_label(label, tooltip, key):
 
 
 def decade_selector():
-    """
-    Create an accordion with decade selection (radio buttons).
-
-    Returns:
-        str: Selected decade ('1920', '1930', ..., '2020') or empty string
-    """
     with st.expander("Selecione a década da música", expanded=False):
         selected_decade = st.radio(
             "Década:",
@@ -35,12 +29,6 @@ def decade_selector():
 
 
 def is_popular_checkbox():
-    """
-    Create a checkbox for popular music filter.
-
-    Returns:
-        bool: Whether to filter for popular music
-    """
     return st.checkbox(
         "Apenas músicas populares",
         value=False,
@@ -49,12 +37,6 @@ def is_popular_checkbox():
 
 
 def is_explicit_checkbox():
-    """
-    Create a checkbox for explicit music filter.
-
-    Returns:
-        bool: Whether to filter for explicit music
-    """
     return st.checkbox(
         "Apenas músicas com palavrões",
         value=False,
@@ -63,21 +45,6 @@ def is_explicit_checkbox():
 
 
 def track_card_html(song: dict) -> str:
-    """
-    Generate HTML for a track card with optional image and Spotify link.
-
-    Args:
-        song (dict): Song information dictionary containing:
-            - title: Track name
-            - artist: Artist name(s)
-            - genres: Genre(s)
-            - image_url (optional): Album cover image URL
-            - spotify_url (optional): Direct link to track on Spotify
-
-    Returns:
-        str: HTML string for the track card
-    """
-    # Escape special characters in strings to prevent HTML breaking
     title = song.get("title", "Unknown").replace('"', "&quot;").replace("'", "&#39;")
     artist = (
         song.get("artist", "Unknown Artist")
@@ -89,13 +56,11 @@ def track_card_html(song: dict) -> str:
     image_url = song.get("image_url", "")
     spotify_url = song.get("spotify_url", "")
 
-    # Generate image HTML
     if image_url:
         image_html = f'<img src="{image_url}" alt="{title}" class="track-image-img">'
     else:
         image_html = '<div class="track-image">🎵</div>'
 
-    # Wrap card with link if spotify_url is available
     card_class = "track-card"
     if spotify_url:
         card_open = f'<a href="{spotify_url}" target="_blank" rel="noopener noreferrer" class="{card_class}-link">'
@@ -132,7 +97,6 @@ def header():
 
 
 def centered_loader():
-    """Display a centered loader with spinner and loading text."""
     loading_html = """
     <div class="loading-container">
         <div class="spinner"></div>

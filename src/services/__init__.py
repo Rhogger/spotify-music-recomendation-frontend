@@ -1,8 +1,3 @@
-"""
-Spotify API Services
-Services for interacting with Spotify Web API
-"""
-
 from .spotify_api import (
     SpotifyAPIError,
     fetch_spotify_data_parallel,

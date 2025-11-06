@@ -1,10 +1,3 @@
-# =============================================================================
-# Design System - Color Variables
-# =============================================================================
-# All colors extracted from .streamlit/config.toml for consistency across the app
-# Use these variables throughout the frontend for a cohesive design system
-# =============================================================================
-
 # Primary Brand Colors
 PRIMARY_COLOR = "#38E07B"  # Primary green - buttons, highlights, accents
 BACKGROUND_COLOR = "#122017"  # Main application background
@@ -23,7 +16,6 @@ CARD_BG_LIGHT = "rgba(41, 45, 42, 0.3)"  # Card background with transparency
 
 
 def get_color_variables() -> str:
-    """Returns CSS color variables for use in styles."""
     return f"""
     :root {{
         --primary-color: {PRIMARY_COLOR};
@@ -803,7 +795,6 @@ def load_styles() -> str:
 
 
 def get_text_overflow_script() -> str:
-    """Returns the text overflow detection script to be injected in the app."""
     return """
         <script>
         function detectTextOverflow() {

@@ -1,8 +1,3 @@
-"""
-Model Loader
-Responsible for loading and caching the music recommendation model and preprocessor
-"""
-
 import os
 import pickle
 from typing import Tuple
@@ -12,8 +7,6 @@ import pandas as pd
 
 
 class ModelLoader:
-    """Handles loading and caching of the ML model and scaler."""
-
     _instance = None
     _model = None
     _scaler = None
@@ -21,38 +14,22 @@ class ModelLoader:
     _features = None
 
     def __new__(cls):
-        """Implement singleton pattern for model loading."""
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
 
     def load(self) -> Tuple:
-        """
-        Load model, scaler, dataframe, and features from disk.
-        Uses singleton pattern to load only once.
-
-        Returns:
-            Tuple: (model, scaler, df, features)
-
-        Raises:
-            FileNotFoundError: If model files are not found
-            Exception: If there's an error loading the files
-        """
-        # Return cached if already loaded
         if self._model is not None and self._features is not None:
             return self._model, self._scaler, self._df, self._features
 
-        # Get base paths
         base_path = os.path.dirname(__file__)
         assets_path = os.path.abspath(os.path.join(base_path, "../assets"))
 
-        # Define file paths
         path_model = os.path.join(assets_path, "models/music_recommender_model.joblib")
         path_scaler = os.path.join(assets_path, "models/scaler.joblib")
         path_df = os.path.join(assets_path, "datasets/pre_processing.csv")
         path_features = os.path.join(assets_path, "models/music_model_features.pkl")
 
-        # Load files with error handling
         try:
             print(f"📂 Loading model from: {path_model}")
             self._model = joblib.load(path_model)
@@ -82,54 +59,44 @@ class ModelLoader:
             raise
 
     def get_model(self):
-        """Get cached model or load if needed."""
         if self._model is None:
             self.load()
         return self._model
 
     def get_preprocessor(self):
-        """Get cached scaler or load if needed."""
         if self._scaler is None:
             self.load()
         return self._scaler
 
     def get_dataframe(self):
-        """Get cached dataframe or load if needed."""
         if self._df is None:
             self.load()
         return self._df
 
     def get_features(self):
-        """Get cached features or load if needed."""
         if self._features is None:
             self.load()
         return self._features
 
 
-# Global loader instance
 _loader = ModelLoader()
 
 
 def load_models() -> Tuple:
-    """Convenience function to load all models."""
     return _loader.load()
 
 
 def get_model():
-    """Get the cached model."""
     return _loader.get_model()
 
 
 def get_preprocessor():
-    """Get the cached preprocessor."""
     return _loader.get_preprocessor()
 
 
 def get_dataframe():
-    """Get the cached dataframe."""
     return _loader.get_dataframe()
 
 
 def get_features():
-    """Get the cached features."""
     return _loader.get_features()

@@ -18,10 +18,8 @@ from ui.styles import get_text_overflow_script, load_styles
 
 
 def init_app():
-    # Load environment variables
     load_dotenv()
 
-    # Load models once at startup using singleton pattern
     model, _, df_model, features = load_models()
 
     st.set_page_config(
@@ -31,7 +29,6 @@ def init_app():
     )
     st.markdown(load_styles(), unsafe_allow_html=True)
 
-    # Injetar o script usando a API de componentes
     components.html(get_text_overflow_script(), height=0)
 
     header()
@@ -62,13 +59,10 @@ def init_app():
                     "valence_slider",
                 )
 
-                # Decade selector
                 decade = decade_selector()
 
-                # Popular checkbox
                 is_popular = is_popular_checkbox()
 
-                # Explicit checkbox
                 is_explicit = is_explicit_checkbox()
 
             submit = st.form_submit_button(
@@ -98,7 +92,7 @@ def init_app():
                     is_popular=is_popular,
                     is_explicit=is_explicit,
                     decade=decade,
-                    top_n=20,
+                    top_n=100,
                 )
                 st.session_state["last_recommendations"] = resultados
                 st.session_state["is_loading"] = True
@@ -108,22 +102,17 @@ def init_app():
     with col2:
         st.markdown("### Músicas Recomendadas")
 
-        # Verificar se está carregando
         is_loading = st.session_state.get("is_loading", False)
 
         if is_loading and "last_recommendations" in st.session_state:
-            # Mostrar loader
             centered_loader()
 
-            # Buscar dados do Spotify
             resultados = st.session_state["last_recommendations"]
             tracks_list = resultados.to_dict("records")
             display_list = fetch_spotify_data_parallel(tracks_list, max_workers=5)
 
-            # Limpar flag de loading
             st.session_state["is_loading"] = False
 
-            # Rerenderizar
             st.rerun()
 
         elif (
@@ -132,14 +121,11 @@ def init_app():
         ):
             resultados = st.session_state["last_recommendations"]
 
-            # Convert DataFrame to list of dictionaries
             tracks_list = resultados.to_dict("records")
 
-            # Fetch Spotify data (already cached from previous load)
             display_list = fetch_spotify_data_parallel(tracks_list, max_workers=5)
 
         else:
-            # Placeholder: orienta o usuário a ajustar parâmetros e gerar a recomendação
             display_list = []
 
             placeholder_html = """
@@ -169,7 +155,6 @@ def init_app():
 
             st.markdown(placeholder_html, unsafe_allow_html=True)
 
-        # Se houver itens para exibir (recommendations), renderiza-os
         if len(display_list) > 0 and not is_loading:
             html_tracks = '<div class="tracks-grid scrollable-list">'
             for song in display_list:
@@ -178,7 +163,6 @@ def init_app():
             html_tracks += "</div>"
             st.markdown(html_tracks, unsafe_allow_html=True)
 
-        # Mostrar mensagem de sem resultados se tentou gerar mas não achou
         elif (
             "last_recommendations" in st.session_state
             and not is_loading
